@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}List of Academic Years{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    {% if messages %}
+        <div>
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    
+    <h2 class="text-center">Academic Years</h2>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Start Year</th>
+                <th>End Year</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for year in academic_years %}
+            <tr>
+                <td>{{ year.year_start }}</td>
+                <td>{{ year.year_end }}</td>
+                <td>
+                    <a href="{% url 'classes:update_academic_year' year.id %}" class="btn btn-info btn-sm">Edit</a>
+                    <a href="{% url 'classes:delete_academic_year' year.id %}" class="btn btn-danger btn-sm">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="{% url 'classes:create_academic_year' %}" class="btn btn-info btn-sm">Create Academic Year</a>
+</div>
+{% endblock %}

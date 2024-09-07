@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %}List of Classes{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    {% if messages %}
+        <div>
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    
+    <h2 class="text-center">Classes</h2>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Academic Year</th>
+                <th>Lecturers</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for class_obj in classes %}
+            <tr>
+                <td>{{ class_obj.name }}</td>
+                <td>{{ class_obj.academic_year }}</td>
+                <td>
+                    {% for lecturer in class_obj.lecturers.all %}
+                        {{ lecturer.first_name }} {{ lecturer.last_name }}{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                </td>
+                <td>
+                    <a href="{% url 'classes:update_class' class_obj.id %}" class="btn btn-info btn-sm">Edit</a>
+                    <a href="{% url 'classes:delete_class' class_obj.id %}" class="btn btn-danger btn-sm">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="{% url 'classes:create_class' %}" class="btn btn-info btn-sm">Add Class</a>
+</div>
+{% endblock %}

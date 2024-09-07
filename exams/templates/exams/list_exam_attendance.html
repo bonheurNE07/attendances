@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block title %}Exam Attendance Records{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    {% if messages %}
+        <div>
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    <h2 class="text-center">Exam Attendance Records</h2>
+
+    <!-- Filter Form -->
+    <form method="GET" class="mb-4">
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                <label for="exam">Exam</label>
+                <select id="exam" name="exam" class="form-control">
+                    <option value="">-- Select Exam --</option>
+                    {% for exam in exams %}
+                    <option value="{{ exam.id }}" {% if exam.id|stringformat:"s" == selected_exam %}selected{% endif %}>{{ exam.course.name }} ({{ exam.assigned_class.name }})</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group col-md-4">
+                <label for="class">Class</label>
+                <select id="class" name="class" class="form-control">
+                    <option value="">-- Select Class --</option>
+                    {% for exam in exams %}
+                    <option value="{{ exam.assigned_class.id }}" {% if exam.assigned_class.id|stringformat:"s" == selected_class %}selected{% endif %}>{{ exam.assigned_class.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group col-md-4">
+                <label for="date">Date</label>
+                <input type="date" id="date" name="date" class="form-control" value="{{ selected_date }}">
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Filter</button>
+    </form>
+
+    <!-- Export Link -->
+    <a href="{% url 'exams:export_exam_attendance' %}?exam={{ selected_exam }}&class={{ selected_class }}&date={{ selected_date }}" class="btn btn-success mb-4">Export to CSV</a>
+
+    <!-- Attendance Records Table -->
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Student ID</th>
+                <th>Student Name</th>
+                <th>Exam</th>
+                <th>Check-in Time</th>
+                <th>Check-out Time</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for attendance in attendances %}
+            <tr>
+                <td>{{ attendance.student.student_rollnumber }}</td>
+                <td>{{ attendance.student.first_name }} {{ attendance.student.last_name }}</td>
+                <td>{{ attendance.exam.course.name }} ({{ attendance.exam.assigned_class.name }})</td>
+                <td>{{ attendance.check_in_time }}</td>
+                <td>{{ attendance.check_out_time }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5">No records found</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

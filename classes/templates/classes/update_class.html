@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %}Update Class{% endblock %}
+
+{% block content %}
+<div class="container col-md-6 mt-5">
+    {% if messages %}
+        <div>
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    
+    <h2 class="text-center">Update Class</h2>
+    <form method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="name">Class Name</label>
+            <input type="text" id="name" name="name" class="form-control" value="{{ class_obj.name }}" placeholder="Enter class name" required>
+        </div>
+        <div class="form-group">
+            <label for="academic_year">Academic Year</label>
+            <select id="academic_year" name="academic_year" class="form-control" required>
+                {% for year in academic_years %}
+                    <option value="{{ year.id }}" {% if class.academic_year.id == year.id %}selected{% endif %}>
+                        {{ year.year_start }} - {{ year.year_end }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="lecturers">Assign Lecturers</label>
+            <select id="lecturers" name="lecturers" class="form-control" multiple required>
+                {% for lecturer in lecturers %}
+                    <option value="{{ lecturer.id }}" {% if lecturer in class.lecturers.all %}selected{% endif %}>
+                        {{ lecturer.first_name }} {{ lecturer.last_name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Update Class</button>
+    </form>
+</div>
+{% endblock %}

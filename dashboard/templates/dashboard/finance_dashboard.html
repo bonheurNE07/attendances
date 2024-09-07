@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    {% if messages %}
+        <div>
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    
+    <h2>Finance Dashboard</h2>
+    <div class="row">
+        <!-- Exam Management Section -->
+        <div class="col-md-6">
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h3>Exam Management</h3>
+                </div>
+                <div class="card-body">
+                    <p>Exam management options</p>
+                </div>
+                <div class="btn-group" role="group" aria-label="Basic outlined example">
+                    <a href="{% url 'exams:list_exams' %}" class="btn btn-primary">View All Exams</a>
+                    <a href="{% url 'exams:export_exam_attendance' %}" class="btn btn-secondary">Export Exam Attendance</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Student Management Section -->
+        <div class="col-md-6">
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h3>Student Management</h3>
+                </div>
+                <div class="card-body">
+                    <p>Students management options</p>
+                </div>
+                <div class="btn-group" role="group" aria-label="Basic outlined example">
+                    <a href="{% url 'students:register_student' %}" class="btn btn-primary">Register Student</a>
+                    <a href="{% url 'students:list_students' %}" class="btn btn-secondary">View All Students</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <!-- Employee Management Section -->
+        <div class="col-md-6">
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h3>Employee Management</h3>
+                </div>
+                <div class="card-body">
+                    <p>Employee Management options</p>
+                </div>
+                <div class="btn-group" role="group" aria-label="Basic outlined example">
+                    <a href="{% url  'employees:register_employee' %}" class="btn btn-primary">Register Employee</a>
+                    <a href="{% url 'employees:list_employees' %}" class="btn btn-secondary">View All Employees</a>
+                    <a href="{% url 'employees:export_attendance_report' %}" class="btn btn-info">Export Employee Attendance</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Attendance Management Section -->
+        <div class="col-md-6">
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h3>Attendance Management</h3>
+                </div>
+                <div class="card-body">
+                    <p>Attendances management options</p>
+                </div>
+                <div class="btn-group" role="group" aria-label="Basic outlined example">
+                    <a href="{% url 'employees:list_employee_attendance' %}" class="btn btn-primary">View Employee Attendance</a>
+                    <a href="{% url 'exams:list_exam_attendance' %}" class="btn btn-secondary">View Exam Attendance</a>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</div>
+{% endblock %}

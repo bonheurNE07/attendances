@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}List of Exams{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    {% if messages %}
+        <div>
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    <h2>List of Exams</h2>
+    
+    {% if exams %}
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Course</th>
+                    <th>Class</th>
+                    <th>Exam Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for exam in exams %}
+                <tr>
+                    <td>{{ exam.course.name }}</td>
+                    <td>{{ exam.assigned_class.name }}</td>
+                    <td>{{ exam.date }}</td>
+                    <td>
+                        <a href="{% url 'exams:update_exam' exam.id %}" class="btn btn-warning btn-sm">Edit</a>
+                        <a href="{% url 'exams:delete_exam' exam.id %}" class="btn btn-danger btn-sm">Delete</a>
+                        <a href="{% url 'exams:confirm_exam_eligibility' exam.id %}" class="btn btn-primary">Confirm Eligibility</a>
+                        <a href="{% url 'exams:exam_attendance_check' exam.id %}" class="btn btn-primary">Take Attendance</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No exams found.</p>
+    {% endif %}
+</div>
+{% endblock %}
+

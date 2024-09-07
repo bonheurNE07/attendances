@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    {% if messages %}
+        <div>
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    
+    <h1>HOD Dashboard</h1>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h5 class="card-title">Students</h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text"><strong>Students:</strong> {{ student_count }}</p>
+                </div>
+                <div class="btn-group" role="group" aria-label="Basic outlined example">
+                    <a href="{% url 'students:list_students' %}" class="btn btn-primary">View Students</a>
+                    <a href="{% url 'students:take_attendance' %}" class="btn btn-secondary">Take Attendance</a>
+                    <a href="{% url 'students:view_attendance_list' %}" class="btn btn-info">View The Attendances</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h5 class="card-title">Classes</h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text"><strong>Clsses: </strong>{{ class_count }}</p>
+                </div>
+                <div class="btn-group" role="group" aria-label="Basic outlined example">
+                    <a href="{% url 'classes:list_classes' %}" class="btn btn-primary">View Classes</a>
+                    <a href="{% url 'classes:create_class' %}" class="btn btn-secondary">Create Classes</a>
+                    <a href="{% url 'classes:list_academic_years' %}" class="btn btn-info">Manage Academic Years</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h5 class="card-title">Courses</h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text"><strong>Courses: </strong>{{ course_count }}</p>
+                </div>
+                <div class="btn-group" role="group" aria-label="Basic outlined example">
+                    <a href="{% url 'courses:list_courses' %}" class="btn btn-primary">View Courses</a>
+                    <a href="{% url 'courses:create_course' %}" class="btn btn-secondary">Create Courses</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h5 class="card-title">Exams</h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text"><strong>Exams: </strong>{{ exam_count }}</p>
+                </div>
+                <div class="btn-group" role="group" aria-label="Basic outlined example">
+                    <a href="{% url 'exams:list_exams' %}" class="btn btn-primary">View Exams</a>
+                    <a href="{% url 'exams:create_exam' %}" class="btn btn-secondary">Creat Exams</a>
+                    <a href="{% url 'exams:list_exam_attendance' %}" class="btn btn-info">View Exam Attendnce</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h5 class="card-title">User Management</h5>
+                </div>
+                <div class="card-body">
+                    <strong>Users: </strong> {{ user_count }}
+                </div>
+                <div class="btn-group" role="group" aria-label="Basic outlined example">
+                    <a href="{% url 'core:register' %}" class="btn btn-primary">Register New User</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

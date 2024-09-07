@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    {% if messages %}
+        <div>
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    <h2>Update Exam</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="course">Course</label>
+            <select name="course" id="course" class="form-control" required>
+                {% for course in courses %}
+                    <option value="{{ course.id }}" {% if course.id == exam.course.id %}selected{% endif %}>
+                        {{ course.name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="assigned_class">Class</label>
+            <select name="assigned_class" id="assigned_class" class="form-control" required>
+                {% for cls in classes %}
+                    <option value="{{ cls.id }}" {% if cls.id == exam.assigned_class.id %}selected{% endif %}>
+                        {{ cls.name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="date">Date</label>
+            <input type="date" name="date" id="date" class="form-control" value="{{ exam.date }}" required>
+        </div>
+        <div class="form-group">
+            <label for="start_time">Start Time</label>
+            <input type="time" name="start_time" id="start_time" class="form-control" value="{{ exam.start_time }}" required>
+        </div>
+        <div class="form-group">
+            <label for="end_time">End Time</label>
+            <input type="time" name="end_time" id="end_time" class="form-control" value="{{ exam.end_time }}" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Update Exam</button>
+    </form>
+</div>
+{% endblock %}

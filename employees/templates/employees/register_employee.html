@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block title %}Register Employee{% endblock %}
+
+{% block content %}
+<div class="container col-md-6 mt-5">
+    {% if messages %}
+        <div>
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    
+    <h2 class="text-center">Register a New Employee</h2>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="photo">Profile Photo</label>
+            <input type="file" id="photo" name="photo" class="form-control-file">
+        </div>
+        <div class="form-group">
+            <label for="first_name">First Name</label>
+            <input type="text" id="first_name" name="first_name" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="last_name">Last Name</label>
+            <input type="text" id="last_name" name="last_name" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="role">Role</label>
+            <select id="role" name="role" class="form-control" required>
+                <option value="Finance">Finance Employee</option>
+                <option value="Security">Security Employee</option>
+                <option value="Other">Other Employee</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="date_of_birth">Date of Birth</label>
+            <input type="date" id="date_of_birth" name="date_of_birth" class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="employee_rfidnumber">RFID Number</label>
+            <input type="text" id="employee_rfidnumber" name="employee_rfidnumber" class="form-control" placeholder="Scan RFID Card Here" required onfocus="this.select()">
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Register Employee</button>
+    </form>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const rfidInput = document.getElementById('employee_rfidnumber');
+        rfidInput.focus();
+    });
+</script>
+{% endblock %}

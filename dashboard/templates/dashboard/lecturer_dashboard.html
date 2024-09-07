@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    {% if messages %}
+    <div>
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <h2>Lecturer Dashboard</h2>
+    
+    <div class="row">
+        <!-- Student Management Section -->
+        <div class="col-md-6">
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h3>Student Management</h3>
+                </div>
+                <div class="card-body">
+                    <p>Manage students in your classes</p>
+                    <p><strong>Total Students:</strong> {{ students.count }}</p>
+                </div>
+                <div class="btn-group" role="group" aria-label="Basic outlined example">
+                    <a href="{% url 'students:list_students' %}" class="btn btn-primary">View Students</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Attendance Management Section -->
+        <div class="col-md-6">
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h3>Attendance Management</h3>
+                </div>
+                <div class="card-body">
+                    <p>Manage and view attendance for your classes</p>
+                    <p><strong>Total Attendances:</strong> {{ attendances.count }}</p>
+                </div>
+                <div class="btn-group" role="group" aria-label="Basic outlined example">
+                    <a href="{% url 'students:take_attendance' %}" class="btn btn-primary">Take Attendance</a>
+                    <a href="{% url 'students:view_attendance_list' %}" class="btn btn-secondary">View Attendance</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <!-- Classes Management Section -->
+        <div class="col-md-12">
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h3>Your Classes</h3>
+                </div>
+                <div class="card-body">
+                    <p>Manage and view details about your classes</p>
+                    <ul  class="list-group list-group-flush">
+                        {% for class in classes %}
+                        <li class="list-group-item">{{ class.name }} - {{ class.academic_year }}</li>
+                        {% empty %}
+                        <li class="list-group-item disabled" aria-disabled="true">No classes assigned.</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

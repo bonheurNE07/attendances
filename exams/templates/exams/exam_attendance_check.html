@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}Exam Attendance Check{% endblock %}
+
+{% block content %}
+<div class="container col-md-6 mt-5">
+    {% if messages %}
+        <div>
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <h2 class="text-center">Check In/Out for Exam: {{ exam.course.name }} - {{ exam.assigned_class.name }} on {{ exam.date }}</h2>
+
+    <form method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="rfid_number">RFID Number</label>
+            <input type="text" id="rfid_number" name="rfid_number" class="form-control" placeholder="Scan RFID Card Here" required onfocus="this.select()">
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Submit</button>
+    </form>
+
+    {% if student %}
+    <div class="card mt-4">
+        {% if student.photo %}
+            <img src="{{ student.photo.url }}" class="card-img-top" alt="Student Photo" style="max-height: 300px; object-fit: cover;">
+        {% endif %}
+        <div class="card-body">
+            <h5 class="card-title">{{ student.first_name }} {{ student.last_name }}</h5>
+            <p class="card-text"><strong>Roll Number:</strong> {{ student.student_rollnumber }}</p>
+            <p class="card-text"><strong>Email:</strong> {{ student.email }}</p>
+            <p class="card-text"><strong>Date of Birth:</strong> {{ student.date_of_birth }}</p>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const rfidInput = document.getElementById('rfid_number');
+        rfidInput.focus();
+    });
+</script>
+{% endblock %}

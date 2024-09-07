@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block title %}Employee Attendance Records{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    {% if messages %}
+        <div>
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    
+    <h2 class="text-center">Employee Attendance Records</h2>
+    <form method="get" action="{% url 'employees:list_employee_attendance' %}" class="form-inline mb-4">
+        <div class="form-group mr-2">
+            <label for="employee_id">Employee:</label>
+            <select name="employee_id" id="employee_id" class="form-control ml-2">
+                <option value="">All</option>
+                {% for emp in employees %}
+                <option value="{{ emp.id }}" {% if request.GET.employee_id == emp.id|stringformat:"s" %}selected{% endif %}>{{ emp.first_name }} {{ emp.last_name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group mr-2">
+            <label for="entry_point">Entry Point:</label>
+            <select name="entry_point" id="entry_point" class="form-control ml-2">
+                <option value="">All</option>
+                <option value="Main Gate" {% if request.GET.entry_point == 'Main Gate' %}selected{% endif %}>Main Gate</option>
+                <option value="Office Entrance" {% if request.GET.entry_point == 'Office Entrance' %}selected{% endif %}>Office Entrance</option>
+                <option value="Gate A" {% if request.GET.entry_point == 'Gate A' %}selected{% endif %}>Gate A</option>
+                <option value="Gate B" {% if request.GET.entry_point == 'Gate B' %}selected{% endif %}>Gate B</option>
+                <option value="Back Entrance" {% if request.GET.entry_point == 'Back Entrance' %}selected{% endif %}>Back Entrance</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-secondary">Filter</button>
+    </form>
+    <table class="table table-striped table-bordered">
+        <thead class="thead-dark">
+            <tr>
+                <th>Employee</th>
+                <th>Check-in Time</th>
+                <th>Check-out Time</th>
+                <th>Entry Point</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for attendance in attendances %}
+            <tr>
+                <td>{{ attendance.employee.first_name }} {{ attendance.employee.last_name }}</td>
+                <td>{{ attendance.check_in_time }}</td>
+                <td>{{ attendance.check_out_time }}</td>
+                <td>{{ attendance.entry_point }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="{% url 'employees:export_attendance_report' %}" class="btn btn-success">Export to CSV</a>
+</div>
+{% endblock %}

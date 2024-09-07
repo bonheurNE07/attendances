@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title %}Update Course{% endblock %}
+
+{% block content %}
+<div class="container col-md-6 mt-5">
+    {% if messages %}
+        <div>
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    <h2 class="text-center">Update Course</h2>
+    <form method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="name">Course Name</label>
+            <input type="text" id="name" name="name" class="form-control" value="{{ course.name }}" required>
+        </div>
+        <div class="form-group">
+            <label for="code">Course Code</label>
+            <input type="text" id="code" name="code" class="form-control" placeholder="{{ course.code }}" required>
+        </div>
+        <div class="form-group">
+            <label for="description">Description</label>
+            <textarea id="description" name="description" class="form-control" rows="4" required>{{ course.description }}</textarea>
+        </div>
+        <div class="form-group">
+            <label for="lecturer">Assign Lecturer</label>
+            <select id="lecturer" name="lecturer" class="form-control" required>
+                {% for lecturer in lecturers %}
+                    <option value="{{ lecturer.id }}" {% if lecturer == course.lecturer %}selected{% endif %}>
+                        {{ lecturer.first_name }} {{ lecturer.last_name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Update Course</button>
+    </form>
+</div>
+{% endblock %}

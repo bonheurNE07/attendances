@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}Create Academic Year{% endblock %}
+
+{% block content %}
+<div class="container col-md-6 mt-5">
+    {% if messages %}
+        <div>
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    <h2 class="text-center">Create a New Academic Year</h2>
+    <form method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="year_start">Start Year</label>
+            <input type="number" id="year_start" name="year_start" class="form-control" placeholder="Enter start year" required>
+        </div>
+        <div class="form-group">
+            <label for="year_end">End Year</label>
+            <input type="number" id="year_end" name="year_end" class="form-control" placeholder="Enter end year" required>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Create Academic Year</button>
+    </form>
+</div>
+{% endblock %}

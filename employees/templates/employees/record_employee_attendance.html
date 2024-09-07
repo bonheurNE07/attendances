@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block title %}Record Employee Attendance{% endblock %}
+
+{% block content %}
+<div class="container col-md-6 mt-5">
+    {% if messages %}
+        <div>
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <h2 class="text-center">Record Employee Attendance</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="rfid_number">RFID Number</label>
+            <input type="text" id="rfid_number" name="rfid_number" class="form-control" placeholder="Scan RFID Card Here" required onfocus="this.select()">
+        </div>
+        <div class="form-group">
+            <label for="entry_point">Entry Point</label>
+            <select id="entry_point" name="entry_point" class="form-control" required>
+                <option value="Main Gate" {% if entry_point == 'Main Gate' %}selected{% endif %}>Main Gate</option>
+                <option value="Office Entrance" {% if entry_point == 'Office Entrance' %}selected{% endif %}>Office Entrance</option>
+                <option value="Gate A" {% if entry_point == 'Gate A' %}selected{% endif %}>Gate A</option>
+                <option value="Gate B" {% if entry_point == 'Gate B' %}selected{% endif %}>Gate B</option>
+                <option value="Back Entrance" {% if entry_point == 'Back Entrance' %}selected{% endif %}>Back Entrance</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Record Attendance</button>
+    </form>
+    
+
+    <!-- Display employee information if available -->
+    {% if employee %}
+    <div class="card mt-4">
+        {% if employee.photo %}
+            <img src="{{ employee.photo.url }}" class="card-img-top" alt="Employee Photo" style="max-height: 300px; object-fit: cover;">
+        {% endif %}
+        <div class="card-body">
+            <h5 class="card-title">{{ employee.first_name }} {{ employee.last_name }}</h5>
+            <p class="card-text"><strong>Email:</strong> {{ employee.email }}</p>
+            <p class="card-text"><strong>Role:</strong> {{ employee.get_role_display }}</p>
+        </div>
+    </div>
+    {% elif status == 'ready' %}
+    <div class="alert alert-danger mt-4" role="alert">
+        <h4 class="alert-heading">Attendance Already Recorded</h4>
+        <p>Attendance for <strong>{{ employee.first_name }} {{ employee.last_name }}</strong> has already been recorded for today.</p>
+        <hr>
+        <p class="mb-0">If this is incorrect, please check the employee's RFID card and try again, or contact the administrator for further assistance.</p>
+    </div>    
+    {% endif %}
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const rfidInput = document.getElementById('rfid_number');
+        rfidInput.focus();
+    });
+</script>
+{% endblock %}

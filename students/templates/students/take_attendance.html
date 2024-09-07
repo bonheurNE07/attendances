@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+{% block title %}Take Attendance{% endblock %}
+
+{% block content %}
+<div class="container col-md-6 mt-5">
+    {% if messages %}
+        <div>
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <h2 class="text-center">Take Attendance</h2>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <div class="form-row align-items-center mb-3">
+            <div class="col-md-6">
+                <label for="selected_class" class="sr-only">Select Class</label>
+                <select id="selected_class" name="selected_class" class="form-control" required>
+                    <option value="">Select Class</option>
+                    {% for class in assigned_classes %}
+                        <option value="{{ class.id }}" {% if class.id|stringformat:"s" == selected_class_id|stringformat:"s" %}selected{% endif %}>
+                            {{ class.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+    
+            <div class="col-md-6">
+                <label for="selected_course" class="sr-only">Select Course</label>
+                <select id="selected_course" name="selected_course" class="form-control" required>
+                    <option value="">Select Course</option>
+                    {% for course in assigned_courses %}
+                        <option value="{{ course.id }}" {% if course.id|stringformat:"s" == selected_course_id|stringformat:"s" %}selected{% endif %}>
+                            {{ course.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="rfid">RFID Number</label>
+            <input type="text" id="rfid" name="rfid" class="form-control" placeholder="Scan RFID Card Here" required onfocus="this.select()">
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Record Attendance</button>
+    </form>
+    
+    <!-- Display student information if available -->
+    {% if student and status == 'not ready' %}
+    <div class="card mt-4">
+        {% if student.photo %}
+            <img src="{{ student.photo.url }}" class="card-img-top" alt="Student Photo" style="max-height: 300px; object-fit: cover;">
+        {% endif %}
+
+        <div class="card-body">
+            <h5 class="card-title">{{ student.first_name }} {{ student.last_name }}</h5>
+            <p class="card-text"><strong>Roll Number:</strong> {{ student.student_rollnumber }}</p>
+        </div>
+    </div>
+    {% elif status == 'ready' %}
+    <div class="alert alert-danger" role="alert">
+        <h4 class="alert-heading">Attendance Already Recorded</h4>
+        <p>Attendance for <strong>{{ student.first_name }} {{ student.last_name }}</strong> has already been recorded for today.</p>
+        <hr>
+        <p class="mb-0">If this is incorrect, please check the student's RFID card and try again, or contact the administrator for further assistance.</p>
+    </div>    
+    {% endif %}
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const rfidInput = document.getElementById('rfid');
+        rfidInput.focus();
+    });
+</script>
+{% endblock %}
