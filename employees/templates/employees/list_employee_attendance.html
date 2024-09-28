@@ -61,6 +61,10 @@
             {% endfor %}
         </tbody>
     </table>
-    <a href="{% url 'employees:export_attendance_report' %}" class="btn btn-success">Export to CSV</a>
+    <div class="mt-4">
+        <a href="{% url 'employees:export_attendance_report' %}?employee_id={{ request.GET.employee_id }}&entry_point={{ request.GET.entry_point }}" class="btn btn-success">Download CSV</a>
+        <a href="{% url 'employees:export_attendance_report_pdf' %}?employee_id={{ request.GET.employee_id }}&entry_point={{ request.GET.entry_point }}" class="btn btn-secondary">Download PDF</a>
+    </div>
+
 </div>
 {% endblock %}

@@ -25,8 +25,7 @@ SECRET_KEY = "django-insecure-e%bs0rl6-0^!cwsjqh16kt^0$m3hlnxr$7^-o32(&u_t3tn1u1
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
-ALLOWED_HOSTS = ['192.168.1.65','127.0.0.1', 'localhost', 'attendance.local']
+ALLOWED_HOSTS = ['*']
 
 # Custom user model
 AUTH_USER_MODEL = 'core.CustomUser'
@@ -51,6 +50,8 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    'schema_graph',
+    'django_spaghetti',
     'core',
     'courses',
     'classes',
@@ -59,6 +60,12 @@ INSTALLED_APPS = [
     'employees',
     'dashboard',
 ]
+
+SPAGHETTI_SAUCE = {
+    'apps': ['core', 'courses','classes','students','exams','employees','dashboard'],
+    'show_fields': True,
+    'exclude': {'auth': ['user']},
+}
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -131,7 +138,7 @@ MESSAGE_TAGS = {
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "Africa/Kigali"
 
 USE_I18N = True
 

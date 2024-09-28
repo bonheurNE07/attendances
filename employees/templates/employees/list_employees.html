@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}All Employees{% endblock %}
 
@@ -32,7 +33,11 @@
         <tbody>
             {% for employee in employees %}
             <tr>
-                <td><img src="{{ employee.photo.url }}" alt="Photo" width="50" class="img-thumbnail"></td>
+                <td>{% if employee.photo %}
+                        <img src="{{ employee.photo.url }}" alt="Photo" width="50" class="img-thumbnail">
+                    {% else %}
+                        <img src="{% static 'images/default.png' %}" alt="Default Photo" width="50" class="img-thumbnail">
+                    {% endif %}</td>
                 <td>{{ employee.first_name }} {{ employee.last_name }}</td>
                 <td>{{ employee.email }}</td>
                 <td>{{ employee.employee_rfidnumber }}</td>

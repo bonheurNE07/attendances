@@ -55,6 +55,7 @@
     {% if attendances %}
     <div class="mt-4">
         <a href="{% url 'students:export_student_attendance' %}?selected_class={{ selected_class_id }}&selected_course={{ selected_course_id }}&selected_date={{ selected_date }}" class="btn btn-secondary">Download CSV</a>
+        <a href="{% url 'students:export_student_attendance_pdf' %}?selected_class={{ selected_class_id }}&selected_course={{ selected_course_id }}&selected_date={{ selected_date }}" class="btn btn-secondary">Download PDF</a>
     </div>
     <table class="table table-striped mt-4">
         <thead>

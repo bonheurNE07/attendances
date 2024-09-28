@@ -4,12 +4,14 @@ from students.models import Student
 from classes.models import Class
 from courses.models import Course
 
+from django.utils import timezone 
+
 CustomUser = get_user_model()
 
 class Exam(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='exams')
     assigned_class = models.ForeignKey(Class, on_delete=models.CASCADE, related_name='exams')
-    date = models.DateField()
+    date = models.DateField(default=timezone.now)
     start_time = models.TimeField()
     end_time = models.TimeField()
     created_by = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, related_name='exams_created')

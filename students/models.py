@@ -37,6 +37,16 @@ class Attendance(models.Model):
     date = models.DateField(auto_now_add=True)
     status = models.CharField(max_length=1, choices=STATUS_CHOICES)
     recorded_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name='attendances_recorded')
+    
+    # New fields for check-in and check-out times
+    check_in = models.DateTimeField(default=timezone.now, null=True, blank=True)
+    check_out = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return f"Attendance of {self.student} on {self.date} for {self.course} - {self.get_status_display()}"
+
+    # Helper method to calculate total time spent in class
+    def time_spent_in_class(self):
+        if self.check_in and self.check_out:
+            return self.check_out - self.check_in
+        return None

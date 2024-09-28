@@ -11,4 +11,5 @@ urlpatterns = [
     path('student/update/<int:id>/', views.update_student, name='update_student'),
     path('student/delete/<int:id>/', views.delete_student, name='delete_student'),
     path('export-attendance/', views.export_student_attendance, name='export_student_attendance'),
+    path('export_attendance_pdf/', views.export_student_attendance_pdf, name='export_student_attendance_pdf'),
 ]

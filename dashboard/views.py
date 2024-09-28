@@ -65,21 +65,28 @@ def lecturer_dashboard(request):
     if not request.user.is_authenticated or request.user.role != 'lecturer':
         raise PermissionDenied
 
-    # Fetch data for the dashboard
-    # Assuming `lecturer_classes` is a related field on the User model for assigned classes
+    # Fetch the classes the lecturer is assigned to
     classes = request.user.classes.all()
+
+    # Fetch the courses that the lecturer provides
+    courses = Course.objects.filter(lecturer=request.user)
+
+    # Fetch students in the lecturer's classes
     students = Student.objects.filter(assigned_class__in=classes)
-    attendances = Attendance.objects.filter(student__in=students)
-    
-    # Additional data for the dashboard
-    # You can add more context data if needed
+
+    # Filter attendance records for the students and the courses taught by the lecturer
+    attendances = Attendance.objects.filter(student__in=students, course__in=courses)
+
+    # Additional context data for the dashboard
     context = {
         'students': students,
         'attendances': attendances,
         'classes': classes,
+        'courses': courses,
     }
-    
+
     return render(request, 'dashboard/lecturer_dashboard.html', context)
+
 
 @login_required
 def security_dashboard(request):

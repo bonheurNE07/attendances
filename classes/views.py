@@ -116,23 +116,23 @@ def create_academic_year(request):
 
         if not year_start.isdigit() or not year_end.isdigit():
             messages.error(request, 'Invalid input. Please enter valid years.')
-            return redirect('create_academic_year')
+            return redirect('classes:create_academic_year')
 
         year_start = int(year_start)
         year_end = int(year_end)
 
         if year_start >= year_end:
             messages.error(request, 'The start year must be before the end year.')
-            return redirect('create_academic_year')
+            return redirect('classes:create_academic_year')
 
         # Check for duplicate academic years
         if AcademicYear.objects.filter(year_start=year_start, year_end=year_end).exists():
             messages.error(request, 'This academic year already exists.')
-            return redirect('create_academic_year')
+            return redirect('classes:create_academic_year')
 
         AcademicYear.objects.create(year_start=year_start, year_end=year_end)
         messages.success(request, 'Academic year created successfully!')
-        return redirect('list_academic_years')
+        return redirect('classes:list_academic_years')
 
     return render(request, 'classes/create_academic_year.html')
 
@@ -149,7 +149,7 @@ def update_academic_year(request, year_id):
 
     if request.user.role not in ['admin', 'hod']:
         messages.error(request, 'You are not authorized to update academic years.')
-        return redirect('list_academic_years')
+        return redirect('classes:list_academic_years')
 
     if request.method == 'POST':
         year_start = request.POST.get('year_start')
@@ -171,7 +171,7 @@ def update_academic_year(request, year_id):
         academic_year.save()
 
         messages.success(request, 'Academic year updated successfully!')
-        return redirect('list_academic_years')
+        return redirect('classes:list_academic_years')
 
     return render(request, 'classes/update_academic_year.html', {'academic_year': academic_year})
 
@@ -182,8 +182,8 @@ def delete_academic_year(request, year_id):
 
     if request.user.role not in ['admin', 'hod']:
         messages.error(request, 'You are not authorized to delete academic years.')
-        return redirect('list_academic_years')
+        return redirect('classes:list_academic_years')
 
     academic_year.delete()
     messages.success(request, 'Academic year deleted successfully!')
-    return redirect('list_academic_years')
+    return redirect('classes:list_academic_years')

@@ -10,5 +10,7 @@ urlpatterns = [
     path('delete/<int:employee_id>/', views.delete_employee, name='delete_employee'),
     path('attendance/record/', views.record_employee_attendance, name='record_employee_attendance'),
     path('attendance/list/', views.list_employee_attendance, name='list_employee_attendance'),
-    path('attendance/export/', views.export_attendance_report, name='export_attendance_report'),
+    # path('attendance/export/', views.export_attendance_report, name='export_attendance_report'),
+    path('export-attendance/', views.export_attendance_report, name='export_attendance_report'),
+    path('export-attendance-pdf/', views.export_attendance_report_pdf, name='export_attendance_report_pdf'),
 ]

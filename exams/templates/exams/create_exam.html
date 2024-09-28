@@ -14,25 +14,31 @@
             {% endfor %}
         </div>
     {% endif %}
+    
     <h2>Create Exam</h2>
     <form method="post">
         {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="assigned_class">Class</label>
+            <select name="assigned_class" id="assigned_class" class="form-control" required onchange="this.form.submit();">
+                <option value="">Select a class</option>
+                {% for cls in classes %}
+                    <option value="{{ cls.id }}" {% if cls.id|stringformat:"s" == selected_class_id|stringformat:"s" %}selected{% endif %}>{{ cls.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        
         <div class="form-group">
             <label for="course">Course</label>
             <select name="course" id="course" class="form-control" required>
+                <option value="">Select a course</option>
                 {% for course in courses %}
-                    <option value="{{ course.id }}">{{ course.name }}</option>
+                    <option value="{{ course.id }}" {% if course.id|stringformat:"s" == selected_course_id|stringformat:"s" %}selected{% endif %}>{{ course.name }}</option>
                 {% endfor %}
             </select>
         </div>
-        <div class="form-group">
-            <label for="assigned_class">Class</label>
-            <select name="assigned_class" id="assigned_class" class="form-control" required>
-                {% for cls in classes %}
-                    <option value="{{ cls.id }}">{{ cls.name }}</option>
-                {% endfor %}
-            </select>
-        </div>
+
         <div class="form-group">
             <label for="date">Date</label>
             <input type="date" name="date" id="date" class="form-control" required>

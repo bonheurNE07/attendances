@@ -14,7 +14,7 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-
+from schema_graph.views import Schema
 from django.contrib import admin
 from django.urls import path, include
 
@@ -23,6 +23,8 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path("schema/", Schema.as_view()),
+    path('plate/', include('django_spaghetti.urls')),
     path('', include('core.urls')),  # Include URLs from the core app
     path('courses/', include('courses.urls')),  
     path('classes/', include('classes.urls')),  
@@ -31,6 +33,7 @@ urlpatterns = [
     path('employees/', include('employees.urls')),
     path('dashboard/', include('dashboard.urls')),
 ]
+
 
 # URL configurations for serving media files during development
 if settings.DEBUG:

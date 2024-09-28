@@ -47,8 +47,9 @@
         <button type="submit" class="btn btn-primary">Filter</button>
     </form>
 
-    <!-- Export Link -->
+    <!-- Export Links -->
     <a href="{% url 'exams:export_exam_attendance' %}?exam={{ selected_exam }}&class={{ selected_class }}&date={{ selected_date }}" class="btn btn-success mb-4">Export to CSV</a>
+    <a href="{% url 'exams:export_exam_attendance_pdf' %}?exam={{ selected_exam }}&class={{ selected_class }}&date={{ selected_date }}" class="btn btn-danger mb-4">Export to PDF</a> <!-- New PDF Export Button -->
 
     <!-- Attendance Records Table -->
     <table class="table table-striped">

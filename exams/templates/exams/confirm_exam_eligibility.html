@@ -33,7 +33,11 @@
                     <td>{{ entry.attendance_percentage }}%</td>
                     <td>{{ entry.student.student_rollnumber }}</td>
                     <td>
-                        <input type="checkbox" name="confirm_{{ entry.student.id }}" {% if entry.is_eligible %}checked{% endif %}>
+                        {% if entry.is_eligible %}
+                        <input type="checkbox" name="confirm_{{ entry.student.id }}" checked>
+                        {% else %}
+                        <span class="text-danger">Not eligible (below 70%)</span>
+                        {% endif %}
                     </td>
                 </tr>
                 {% endfor %}

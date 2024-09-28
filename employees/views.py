@@ -11,6 +11,17 @@ from django.http import HttpResponse
 from datetime import date
 from core.views import text_to_speech
 
+
+from reportlab.lib.pagesizes import letter, landscape
+from reportlab.lib.units import inch
+from reportlab.pdfgen import canvas
+from django.utils import timezone
+from io import BytesIO
+from django.utils.timezone import localtime
+from Devices.servo import set_angle
+import time
+from datetime import timedelta
+
 CustomUser = get_user_model()
 
 def is_finance(user):
@@ -57,7 +68,7 @@ def register_employee(request):
 
 @login_required
 def list_employees(request):
-    if request.user.role not in ['finance', ]:
+    if request.user.role in ['finance', ]:
         employees = Employee.objects.all()
         return render(request, 'employees/list_employees.html', {'employees': employees})
     else:
@@ -132,9 +143,12 @@ def record_employee_attendance(request):
                             attendance.entry_point = entry_point
                             attendance.recorded_by = request.user
                             attendance.save()
-                            text_to_speech(f'{employee.first_name} Thank you.')
+                            text_to_speech('Thank you.')
                             messages.success(request, f'Check-out recorded for {employee.first_name} {employee.last_name}.')
                             status = 'checked out'
+                            set_angle(90)
+                            time.sleep(2.1)
+                            set_angle(0)
                             break
                     if status != 'checked out':
                         # If no open record was found, create a new check-in record
@@ -146,6 +160,9 @@ def record_employee_attendance(request):
                         )
                         messages.success(request, f'Check-in recorded for {employee.first_name} {employee.last_name}.')
                         status = 'checked in'
+                        set_angle(90)
+                        time.sleep(2.1)
+                        set_angle(0)
                 else:
                     # Create new attendance record if none exists
                     EmployeeAttendance.objects.create(
@@ -156,6 +173,9 @@ def record_employee_attendance(request):
                     )
                     messages.success(request, f'Check-in recorded for {employee.first_name} {employee.last_name}.')
                     status = 'checked in'
+                    set_angle(90)
+                    time.sleep(2.1)
+                    set_angle(0)
                 
             except Employee.DoesNotExist:
                 messages.error(request, 'Employee not found. Please check the RFID number.')
@@ -200,16 +220,105 @@ def export_attendance_report(request):
 
         # Create a CSV writer
         writer = csv.writer(response)
-        writer.writerow(['Employee Name', 'Check-in Time', 'Check-out Time', 'Entry Point'])
+        writer.writerow(['Employee Name', 'Check-in Time', 'Check-out Time', 'Entry Point', 'Hours Worked'])
 
         # Get all attendance records
-        attendances = EmployeeAttendance.objects.all()
+        attendances = EmployeeAttendance.objects.filter()
+
+        employee_id = request.GET.get('employee_id')
+        if employee_id:
+            attendances = attendances.filter(employee__id=employee_id)
+
+        # Filter by entry point
+        entry_point = request.GET.get('entry_point')
+        if entry_point:
+            attendances = attendances.filter(entry_point=entry_point)
 
         # Write data to CSV
         for attendance in attendances:
-            writer.writerow([attendance.employee.first_name + ' ' + attendance.employee.last_name,
-                            attendance.check_in_time, attendance.check_out_time, attendance.entry_point])
-        text_to_speech('Exported !')
+            check_in = localtime(attendance.check_in_time).strftime("%d/%m/%Y, %H:%M") if attendance.check_in_time else 'N/A'
+            check_out = localtime(attendance.check_out_time).strftime("%d/%m/%Y, %H:%M") if attendance.check_out_time else 'N/A'
+            hours_worked = ''
+        
+            if attendance.check_in_time and attendance.check_out_time:
+                time_diff = attendance.check_out_time - attendance.check_in_time
+                total_minutes = time_diff.total_seconds() / 60
+                hours, minutes = divmod(total_minutes, 60)
+                hours_worked = f"{int(hours)}h {int(minutes)}m"
+            writer.writerow([
+                f"{attendance.employee.first_name} {attendance.employee.last_name}",
+                check_in,
+                check_out,
+                attendance.entry_point,
+                hours_worked
+            ])
+
         return response
     else:
         raise PermissionDenied
+
+
+
+
+@login_required
+def export_attendance_report_pdf(request):
+    if request.user.role not in ['finance', 'security']:
+        raise PermissionDenied
+
+    employee_id = request.GET.get('employee_id')
+    entry_point = request.GET.get('entry_point')
+
+    # Initialize variables
+    attendances = EmployeeAttendance.objects.all()
+
+    if employee_id:
+        attendances = attendances.filter(employee__id=employee_id)
+
+    if entry_point:
+        attendances = attendances.filter(entry_point=entry_point)
+
+    # Create the PDF response with landscape format
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="employee_attendance_report_{date.today()}.pdf"'
+
+    pdf_canvas = canvas.Canvas(response, pagesize=landscape(letter))
+    pdf_canvas.setTitle("Employee Attendance Report")
+
+    # Add title
+    pdf_canvas.setFont("Helvetica-Bold", 20)
+    pdf_canvas.drawString(1 * inch, 7.5 * inch, "Employee Attendance Report")
+
+    # Add table headers
+    pdf_canvas.setFont("Helvetica", 12)
+    pdf_canvas.drawString(1 * inch, 7 * inch, "Employee Name")
+    pdf_canvas.drawString(3 * inch, 7 * inch, "Check-in Time")
+    pdf_canvas.drawString(5 * inch, 7 * inch, "Check-out Time")
+    pdf_canvas.drawString(7 * inch, 7 * inch, "Entry Point")
+    pdf_canvas.drawString(9 * inch, 7 * inch, "Hours Worked")
+
+    # Write attendance data
+    y = 6.7 * inch
+    for attendance in attendances:
+        check_in = localtime(attendance.check_in_time).strftime("%d/%m/%Y, %H:%M") if attendance.check_in_time else 'N/A'
+        check_out = localtime(attendance.check_out_time).strftime("%d/%m/%Y, %H:%M") if attendance.check_out_time else 'N/A'
+        hours_worked = ''
+        
+        if attendance.check_in_time and attendance.check_out_time:
+            time_diff = attendance.check_out_time - attendance.check_in_time
+            total_minutes = time_diff.total_seconds() / 60
+            hours, minutes = divmod(total_minutes, 60)
+            hours_worked = f"{int(hours)}h {int(minutes)}m"
+
+        pdf_canvas.drawString(1 * inch, y, f"{attendance.employee.first_name} {attendance.employee.last_name}")
+        pdf_canvas.drawString(3 * inch, y, str(check_in))
+        pdf_canvas.drawString(5 * inch, y, str(check_out))
+        pdf_canvas.drawString(7 * inch, y, attendance.entry_point)
+        pdf_canvas.drawString(9 * inch, y, hours_worked)
+
+        y -= 0.3 * inch
+
+    # Finalize the PDF
+    pdf_canvas.showPage()
+    pdf_canvas.save()
+
+    return response

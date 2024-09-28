@@ -12,4 +12,6 @@ urlpatterns = [
     path('attendance/<int:exam_id>/', views.exam_attendance_check, name='exam_attendance_check'),
     path('attendance/list/', views.list_exam_attendance, name='list_exam_attendance'),
     path('attendance/export/', views.export_exam_attendance, name='export_exam_attendance'),
+    path('attendance/export-pdf/', views.export_exam_attendance_pdf, name='export_exam_attendance_pdf'),
+    path('get-courses/', views.get_courses_by_class, name='get_courses_by_class'),
 ]

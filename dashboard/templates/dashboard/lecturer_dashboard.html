@@ -54,19 +54,28 @@
     </div>
 
     <div class="row mt-4">
-        <!-- Classes Management Section -->
+        <!-- Classes and Courses Management Section -->
         <div class="col-md-12">
             <div class="card mb-3">
                 <div class="card-header">
-                    <h3>Your Classes</h3>
+                    <h3>Your Classes and Courses</h3>
                 </div>
                 <div class="card-body">
-                    <p>Manage and view details about your classes</p>
-                    <ul  class="list-group list-group-flush">
+                    <p>Manage and view details about your classes and courses</p>
+                    <ul class="list-group list-group-flush">
                         {% for class in classes %}
-                        <li class="list-group-item">{{ class.name }} - {{ class.academic_year }}</li>
+                        <li class="list-group-item">
+                            <strong>Class:</strong> {{ class.name }} - {{ class.academic_year }}
+                            <ul>
+                                {% for course in courses %}
+                                <li>
+                                    <strong>Course:</strong> {{ course.name }} ({{ course.code }})
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </li>
                         {% empty %}
-                        <li class="list-group-item disabled" aria-disabled="true">No classes assigned.</li>
+                        <li class="list-group-item disabled" aria-disabled="true">No classes or courses assigned.</li>
                         {% endfor %}
                     </ul>
                 </div>

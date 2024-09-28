@@ -41,6 +41,17 @@
                 {% endfor %}
             </select>
         </div>
+        <div class="form-group">
+            <label for="assigned_class">Assign Class</label>
+            <select id="assigned_class" name="assigned_class" class="form-control" required>
+                {% for class in classes %}
+                    <option value="{{ class.id }}" {% if course.assigned_class.id == class.id %}selected{% endif %}>
+                        {{ class.name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
         <button type="submit" class="btn btn-primary btn-block">Update Course</button>
     </form>
 </div>
