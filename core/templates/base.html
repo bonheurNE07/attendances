@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}My Website{% endblock %}</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{% url 'core:home' %}">Home</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <form class="d-flex" role="search">
+            {% if user.is_authenticated %}
+                <span class="navbar-text">Welcome, {{ user.username }}!</span>
+                {% if user.is_hod %}
+                    <a href="{% url 'dashboard:hod_dashboard' %}" class="btn btn-outline-primary ml-2">HOD Dashboard</a>
+                {% elif user.is_lecturer %}
+                    <a href="{% url 'dashboard:lecturer_dashboard' %}" class="btn btn-outline-primary ml-2">Lecturer Dashboard</a>
+                {% elif user.is_finance_employee %}
+                    <a href="{% url 'dashboard:finance_dashboard' %}" class="btn btn-outline-primary ml-2">Finance Dashboard</a>
+                {% elif user.is_security_employee %}
+                    <a href="{% url 'dashboard:security_dashboard' %}" class="btn btn-outline-primary ml-2">Security Dashboard</a>
+                {% endif %}
+                <a href="{% url 'core:profile' %}" class="btn btn-outline-success">View Profile</a>
+                <a href="{% url 'core:logout' %}" class="btn btn-outline-danger ml-2">Logout</a>
+            {% else %}
+                <a href="{% url 'core:login' %}" class="btn btn-outline-primary ml-2">Login</a>
+            {% endif %}
+          </form>
+        </div>
+    </nav>
+    
+
+    <div class="container mt-4">
+        {% block content %}
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <!-- Default content -->
+        {% endblock %}
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
