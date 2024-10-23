@@ -18,7 +18,7 @@ from reportlab.pdfgen import canvas
 from django.utils import timezone
 from io import BytesIO
 from django.utils.timezone import localtime
-from Devices.servo import set_angle
+# from Devices.servo import set_angle
 import time
 from datetime import timedelta
 
@@ -146,9 +146,9 @@ def record_employee_attendance(request):
                             text_to_speech('Thank you.')
                             messages.success(request, f'Check-out recorded for {employee.first_name} {employee.last_name}.')
                             status = 'checked out'
-                            set_angle(90)
-                            time.sleep(2.1)
-                            set_angle(0)
+                            # set_angle(90)
+                            # time.sleep(2.1)
+                            # set_angle(0)
                             break
                     if status != 'checked out':
                         # If no open record was found, create a new check-in record
@@ -160,9 +160,9 @@ def record_employee_attendance(request):
                         )
                         messages.success(request, f'Check-in recorded for {employee.first_name} {employee.last_name}.')
                         status = 'checked in'
-                        set_angle(90)
-                        time.sleep(2.1)
-                        set_angle(0)
+                        # set_angle(90)
+                        # time.sleep(2.1)
+                        # set_angle(0)
                 else:
                     # Create new attendance record if none exists
                     EmployeeAttendance.objects.create(
@@ -173,9 +173,9 @@ def record_employee_attendance(request):
                     )
                     messages.success(request, f'Check-in recorded for {employee.first_name} {employee.last_name}.')
                     status = 'checked in'
-                    set_angle(90)
-                    time.sleep(2.1)
-                    set_angle(0)
+                    # set_angle(90)
+                    # time.sleep(2.1)
+                    # set_angle(0)
                 
             except Employee.DoesNotExist:
                 messages.error(request, 'Employee not found. Please check the RFID number.')

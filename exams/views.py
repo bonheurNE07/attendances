@@ -17,7 +17,7 @@ from courses.models import Course
 from students.models import Attendance
 from core.views import text_to_speech
 
-from Devices.servo import set_angle
+# from Devices.servo import set_angle
 import time
 from datetime import datetime, date
 
@@ -298,13 +298,13 @@ def exam_attendance_check(request, exam_id):
                 attendance.save()
                 messages.success(request, f"Check-out recorded for {student.first_name} {student.last_name}.")
                 text_to_speech('Thank you.')
-                set_angle(90)
-                time.sleep(2.1)
-                set_angle(0)
+                # set_angle(90)
+                # time.sleep(2.1)
+                # set_angle(0)
             elif not attendance.check_in_time:
-                set_angle(90)
-                time.sleep(2.1)
-                set_angle(0)
+                # set_angle(90)
+                # time.sleep(2.1)
+                # set_angle(0)
                 # Student is checking in
                 attendance.check_in_time = timezone.now()
                 attendance.save()
@@ -312,9 +312,9 @@ def exam_attendance_check(request, exam_id):
             else:
                 text_to_speech('Thank you.')
                 messages.info(request, "Student has already checked in and out.")
-                set_angle(90)
-                time.sleep(2.1)
-                set_angle(0)
+                # set_angle(90)
+                # time.sleep(2.1)
+                # set_angle(0)
 
         # Render the attendance check-in page with student info if available
         return render(request, 'exams/exam_attendance_check.html', {

@@ -50,8 +50,6 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    'schema_graph',
-    'django_spaghetti',
     'core',
     'courses',
     'classes',
